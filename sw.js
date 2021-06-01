@@ -9,7 +9,7 @@ const APP_SHELL = [
     //"/",
     "index.html",
     "js/app.js",
-    "js/base.js"
+    "js/base.js",
     "style/base.css",
     "style/bg.png",
 ];
