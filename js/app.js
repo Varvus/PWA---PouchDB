@@ -34,13 +34,13 @@
   // Show the current list of todos by reading them from the database
   function showTodos() {
 
-    db.allDocs({include_docs: true, descending: true}, function(err, doc) {
+    /*db.allDocs({include_docs: true, descending: true}, function(err, doc) {
       redrawTodosUI(doc.rows);
-    });
-    /*db.allDocs({ include_docs:true, descending: true })
+    });*/
+    db.allDocs({ include_docs:true, descending: true })
       .then( doc => {
         redrawTodosUI(doc.rows);
-      });*/
+      });
 
   }
 
