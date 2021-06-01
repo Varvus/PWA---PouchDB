@@ -1,5 +1,5 @@
 //const CACHE_NAME = 'cache-1';
-const CACHE_STATIC_NAME     = 'static-v2';
+const CACHE_STATIC_NAME     = 'static-v1';
 const CACHE_DYNAMIC_NAME    = 'dynamic-v1';
 
 const CACHE_INMUTABLE_NAME  = 'inmutable-v1';
@@ -22,47 +22,46 @@ self.addEventListener("install", e => {
     const cacheProm = caches.open(CACHE_STATIC_NAME)
         .then( cache => {
             return cache.addAll([
-                '/',
-                '/index.html',
-                '/css/style.css',
-                '/img/main.jpg',
-                '/js/app.js',
-                '/img/no-img.jpg' 
+                /*'/',*/
+                '/index.html'/*,
+                '/style/base.css',
+                '/style/bg.png',
+                '/js/app.js'*/
             ]);
         });
 
         e.waitUntil( Promise.all([cacheProm, cacheInmutable]));
-    });
+});
 
-    const cacheInmutable = caches.open( CACHE_INMUTABLE_NAME )
+const cacheInmutable = caches.open( CACHE_INMUTABLE_NAME )
     .then( cache => cache.add('https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css'));
 
     self.addEventListener('fetch', e => {
 
-    //5-Cache & network Race
-    const respuesta = new Promise( (resolve, reject) => {
-        const rechazada = false;
+        //5-Cache & network Race
+        const respuesta = new Promise( (resolve, reject) => {
+            const rechazada = false;
 
-        const falloUnaVez = () => {
-            if(rechazada){
-                if( /\.(png|jpg)$/i.test(e.request.url) ){
-                    resolve( caches.match('/img/no-image.jpg') );
+            const falloUnaVez = () => {
+                if(rechazada){
+                    if( /\.(png|jpg)$/i.test(e.request.url) ){
+                        resolve( caches.match('/img/no-image.jpg') );
+                    } else {
+                        reject("No se encontro respuesta");
+                    }
                 } else {
-                    reject("No se encontro respuesta");
+                    rechazada = true;
                 }
-            } else {
-                rechazada = true;
-            }
-        };
+            };
 
-        fetch( e.request ).then( res => {
-            res.ok ? resolve(res) : falloUnaVez;
-        }).catch( falloUnaVez );
+            fetch( e.request ).then( res => {
+                res.ok ? resolve(res) : falloUnaVez;
+            }).catch( falloUnaVez );
 
-        caches.match( e.request ).then(res => {
-            res ? resolve( res ) : falloUnaVez();
-        }).catch( falloUnaVez );
-    }); 
+            caches.match( e.request ).then(res => {
+                res ? resolve( res ) : falloUnaVez();
+            }).catch( falloUnaVez );
+        }); 
 
-    e.respondWith( respuesta );
-    });
+        e.respondWith( respuesta );
+});
