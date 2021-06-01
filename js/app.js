@@ -1,5 +1,5 @@
 var url = window.location.href;
-var swLocation = "/Twittor/sw.js";
+var swLocation = "/PouchDB/sw.js";
 
 if (navigator.serviceWorker){
 
