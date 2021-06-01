@@ -33,10 +33,10 @@ self.addEventListener("install", e => {
         e.waitUntil( Promise.all([cacheProm, cacheInmutable]));
 });
 
-const cacheInmutable = caches.open( CACHE_INMUTABLE_NAME )
+/*const cacheInmutable = caches.open( CACHE_INMUTABLE_NAME )
     .then( cache => cache.add('https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css'));
 
-    self.addEventListener('fetch', e => {
+self.addEventListener('fetch', e => {
 
         //5-Cache & network Race
         const respuesta = new Promise( (resolve, reject) => {
@@ -64,4 +64,4 @@ const cacheInmutable = caches.open( CACHE_INMUTABLE_NAME )
         }); 
 
         e.respondWith( respuesta );
-});
+});*/
