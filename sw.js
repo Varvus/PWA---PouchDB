@@ -1,67 +1,70 @@
-//const CACHE_NAME = 'cache-1';
-const CACHE_STATIC_NAME     = 'static-v1';
-const CACHE_DYNAMIC_NAME    = 'dynamic-v1';
+//imports
+/*importScripts("js/sw-utils.js");*/
 
-const CACHE_INMUTABLE_NAME  = 'inmutable-v1';
-const CACHE_DYNAMIC_LIMIT = 50;
+const STATIC_CACHE = "static-v4";
+const DYNAMIC_CACHE = "dynamic-v2";
+const INMUTABLE_CACHE = "inmutable-v1";
 
-function limpiarCache( cacheName, numeroItems){
-caches.open( cacheName )
-    .then(cache => {
-        return cache.keys()
-            .then(keys => {
-                if(keys.length > numeroItems){
-                    cache.delete(keys[0])
-                        .then( limpiarCache(cacheName, numeroItems) );
-                }
-            })
-    });
-}
+const APP_SHELL = [
+    //"/",
+    "index.html",
+    /*"css/style.css",
+    "img/favicon.ico",
+    "img/avatars/hulk.jpg",
+    "img/avatars/ironman.jpg",
+    "img/avatars/spiderman.jpg",
+    "img/avatars/thor.jpg",
+    "img/avatars/wolverine.jpg",
+    "js/app.js"*/
+];
+
+/*const APP_SHELL_INMUTABLE = [
+    "https://fonts.googleapis.com/css?family=Quicksand:300,400",
+    "https://fonts.googleapis.com/css?family=Lato:400,300",
+    "https://use.fontawesome.com/releases/v5.3.1/css/all.css",
+    "css/animate.css",
+    "js/libs/jquery.js"
+];*/
 
 self.addEventListener("install", e => {
-    const cacheProm = caches.open(CACHE_STATIC_NAME)
-        .then( cache => {
-            return cache.addAll([
-                /*'/',*/
-                '/index.html'/*,
-                '/style/base.css',
-                '/style/bg.png',
-                '/js/app.js'*/
-            ]);
-        });
+    const cacheStatic = caches.open( STATIC_CACHE ).then(cache => 
+        cache.addAll( APP_SHELL ));
+    /*const cacheInmutable = caches.open( INMUTABLE_CACHE ).then(cache => 
+        cache.addAll( APP_SHELL_INMUTABLE ));*/
 
-        e.waitUntil( Promise.all([cacheProm, cacheInmutable]));
+    e.waitUntil( Promise.all([ cacheStatic /*, cacheInmutable*/ ]) );
 });
 
-/*const cacheInmutable = caches.open( CACHE_INMUTABLE_NAME )
-    .then( cache => cache.add('https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css'));
+/*self.addEventListener("activate", e => {
 
-self.addEventListener('fetch', e => {
+    const respuesta = caches.keys().then( keys => {
+        keys.forEach( key => {
+            if( key !== STATIC_CACHE && key.includes("static") ){
+                return caches.delete(key);
+            }
+            if( key !== DYNAMIC_CACHE && key.includes("dynamic") ){
+                return caches.delete(key);
+            }
+        });
+    });
 
-        //5-Cache & network Race
-        const respuesta = new Promise( (resolve, reject) => {
-            const rechazada = false;
+    e.waitUntil( respuesta );
 
-            const falloUnaVez = () => {
-                if(rechazada){
-                    if( /\.(png|jpg)$/i.test(e.request.url) ){
-                        resolve( caches.match('/img/no-image.jpg') );
-                    } else {
-                        reject("No se encontro respuesta");
-                    }
-                } else {
-                    rechazada = true;
-                }
-            };
+});
 
-            fetch( e.request ).then( res => {
-                res.ok ? resolve(res) : falloUnaVez;
-            }).catch( falloUnaVez );
+self.addEventListener("fetch", e => {
 
-            caches.match( e.request ).then(res => {
-                res ? resolve( res ) : falloUnaVez();
-            }).catch( falloUnaVez );
-        }); 
+    const respuesta = caches.match( e.request ).then( res => {
 
-        e.respondWith( respuesta );
+        if(res){
+            return res;
+        } else {
+            return fetch(e.request).then( newRes => {
+                return actualizaCacheDinamico( DYNAMIC_CACHE, e.request, newRes);
+            });
+        }
+    
+    });
+
+    e.respondWith( respuesta );
 });*/
