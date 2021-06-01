@@ -6,7 +6,6 @@
   var swLocation = "/PouchDB/sw.js";
 
   if (navigator.serviceWorker){
-
       if( url.includes("localhost") ){
           swLocation = "/sw.js";
       }
