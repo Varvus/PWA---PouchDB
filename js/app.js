@@ -25,7 +25,8 @@
         console.log('Successfully posted a todo!');
       }
     });*/
-    db.put( todo ).then( console.log( "Insertado" ) );
+    db.put( todo )
+      .then( console.log( "Insertado" ) )
       .catch( console.log );
 
   }
