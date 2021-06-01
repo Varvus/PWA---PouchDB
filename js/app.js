@@ -19,12 +19,14 @@
       title: text,
       completed: false
     };
-    
-    db.put(todo, function callback(err, result) {
+
+    /*db.put(todo, function callback(err, result) {
       if (!err) {
         console.log('Successfully posted a todo!');
       }
-    });
+    });*/
+    db.put( todo ).then( console.log( "Insertado" ) );
+      .catch( console.log );
 
   }
 
