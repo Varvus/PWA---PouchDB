@@ -14,24 +14,20 @@ const APP_SHELL = [
     "style/bg.png",
 ];
 
-/*const APP_SHELL_INMUTABLE = [
-    "https://fonts.googleapis.com/css?family=Quicksand:300,400",
-    "https://fonts.googleapis.com/css?family=Lato:400,300",
-    "https://use.fontawesome.com/releases/v5.3.1/css/all.css",
-    "css/animate.css",
-    "js/libs/jquery.js"
-];*/
+const APP_SHELL_INMUTABLE = [
+    "//cdn.jsdelivr.net/npm/pouchdb@7.2.1/dist/pouchdb.min.js",
+];
 
 self.addEventListener("install", e => {
     const cacheStatic = caches.open( STATIC_CACHE ).then(cache => 
         cache.addAll( APP_SHELL ));
-    /*const cacheInmutable = caches.open( INMUTABLE_CACHE ).then(cache => 
-        cache.addAll( APP_SHELL_INMUTABLE ));*/
+    const cacheInmutable = caches.open( INMUTABLE_CACHE ).then(cache => 
+        cache.addAll( APP_SHELL_INMUTABLE ));
 
-    e.waitUntil( Promise.all([ cacheStatic /*, cacheInmutable*/ ]) );
+    e.waitUntil( Promise.all([ cacheStatic, cacheInmutable ]) );
 });
 
-/*self.addEventListener("activate", e => {
+self.addEventListener("activate", e => {
 
     const respuesta = caches.keys().then( keys => {
         keys.forEach( key => {
@@ -63,4 +59,4 @@ self.addEventListener("fetch", e => {
     });
 
     e.respondWith( respuesta );
-});*/
+});
